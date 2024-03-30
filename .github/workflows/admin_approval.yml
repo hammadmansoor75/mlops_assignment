@@ -1,20 +1,47 @@
+name: Admin Approval
+
+on:
+  push:
+    branches:
+      - '*'
+
 jobs:
   admin_approval:
     name: Admin Approval
     runs-on: ubuntu-latest
 
     steps:
-      - name: Notify Admin
+      - name: Check if admin approval is required
+        id: check_approval
+        run: |
+          # Logic to determine if admin approval is required
+          # For example, you might check if the push is from a member of a specific team or organization.
+          # You can use GitHub's API or other methods to perform this check.
+          # If admin approval is required, set the output variable "approval_required" to "true".
+
+          # For demo purposes, let's assume admin approval is always required.
+          echo "::set-output name=approval_required::true"
+
+      - name: Notify Admin if Approval Required
+        if: steps.check_approval.outputs.approval_required == 'true'
         uses: dorny/paths-filter@v2
         with:
           filters: |
             pr:
               branches-ignore:
                 - 'master'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TOKEN_MLOPS }}
           notify:
-            - username: admin_username
+            - username: hammadmansoor75  # Replace with the username of your admin
               events: [opened, synchronize]
               message: |
                 Hey @admin_username, there's a new pull request that needs your approval.
                 Please review and approve if everything looks good.
+
+      - name: Merge Changes if Approved
+        if: steps.check_approval.outputs.approval_required != 'true'
+        run: |
+          # Logic to merge changes if admin approval is not required
+          # This can involve directly merging the changes, applying additional checks, etc.
+          # For demo purposes, let's assume we just echo a message here.
+          echo "No admin approval required. Merging changes."
