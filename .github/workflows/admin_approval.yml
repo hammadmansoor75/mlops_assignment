@@ -1,0 +1,20 @@
+jobs:
+  admin_approval:
+    name: Admin Approval
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Admin
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            pr:
+              branches-ignore:
+                - 'master'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          notify:
+            - username: admin_username
+              events: [opened, synchronize]
+              message: |
+                Hey @admin_username, there's a new pull request that needs your approval.
+                Please review and approve if everything looks good.

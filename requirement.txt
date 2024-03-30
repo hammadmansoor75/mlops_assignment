@@ -1,0 +1,9 @@
+scikit-learn
+seaborn
+jupyter
+nbconvert
+pandas
+matplotlib
+numpy
+StandardScaler
+scikit-learn
